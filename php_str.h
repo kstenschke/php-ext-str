@@ -30,6 +30,7 @@ PHP_FUNCTION(str_iswhitespace);
 PHP_FUNCTION(str_swapcase);
 PHP_FUNCTION(str_contains);
 PHP_FUNCTION(str_wrap);
+PHP_FUNCTION(str_startsnumerical);
 
 /*
     Declare any global variables you may need between the BEGIN

@@ -24,6 +24,7 @@ const zend_function_entry str_functions[] = {
     PHP_FE(str_swapcase,        NULL)
     PHP_FE(str_contains,        NULL)
     PHP_FE(str_wrap,            NULL)
+    PHP_FE(str_startsnumerical, NULL)
     {NULL, NULL, NULL}
 };
 /* }}} */
@@ -390,6 +391,26 @@ PHP_FUNCTION(str_wrap)
     result = strcat(result, rhs);
 
     RETURN_STRINGL(result, result_len, 0)
+}
+/* }}} */
+
+/* {{{ proto bool str_wrap(string input)
+   Checks whether the given string starts with a number, or optional a negative number. */
+PHP_FUNCTION(str_startsnumerical)
+{
+    char *haystack;
+    int haystack_len;
+    zend_bool allow_negative = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bb", &haystack, &haystack_len, &allow_negative) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    if (haystack_len == 0) {
+        RETURN_FALSE;
+    }
+
+    RETURN_BOOL(isdigit(haystack[0]) || allow_negative && haystack_len > 1 && ('-' == haystack[0]) && isdigit(haystack[1]));
 }
 /* }}} */
 
