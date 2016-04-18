@@ -1,11 +1,11 @@
 h1. ext/str
 
-Set of utility functions for strings in PHP.  
+Set of utility functions for strings in PHP.
 
-Started in 2011 by Martin Jansen, primarily for personal entertainment. 
+Started in 2011 by Martin Jansen, primarily for personal entertainment.
 Extended in 2016 by Kay Stenschke.
 
-Most of that stuff isn't tested that well (though there are unit tests available) 
+Most of that stuff isn't tested that well (though there are unit tests available)
 and the API and the behaviour of the functions is likely to change.  You have been warned.
 
 
@@ -51,7 +51,7 @@ Returns true if the given string is empty or contains whitespace characters only
 
 h3. str_swapcase(input) : string
 
-Returns the given string with uppercase characters converted to their lowercase representations and vice versa. 
+Returns the given string with uppercase characters converted to their lowercase representations and vice versa.
 
 
 h3. str_wrap(lhs, input, rhs) : string
@@ -88,7 +88,6 @@ $ php run-tests.php ./ext/str/tests/
 
 h2. TODO / ideas
 
-* extend str_wrap with additional optional parameter: prevent_doublewrapping
 * str_expandtabs(string) : string
 * str_startsnumerical(string) : bool
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string

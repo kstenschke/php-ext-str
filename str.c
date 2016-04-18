@@ -323,29 +323,70 @@ PHP_FUNCTION(str_swapcase)
 }
 /* }}} */
 
+bool startsWith(const char *pre, const char *str)
+{
+	if (str == NULL || pre == NULL) return 0;
+
+    size_t len_pre = strlen(pre),
+           len_str = strlen(str);
+
+	if (len_pre == 0) return 1;
+
+    return len_str < len_pre ? false : strncmp(pre, str, len_pre) == 0;
+}
+
+char* subString (const char* input, int offset, int len, char* dest)
+{
+  int input_len = strlen (input);
+
+  if (offset + len > input_len) {
+     return NULL;
+  }
+
+  strncpy (dest, input + offset, len);
+  return dest;
+}
+
+bool endsWith(const char *post, const char *str)
+{
+    if (str == NULL || post == NULL) return 0;
+
+    size_t len_post = strlen(post),
+           len_str = strlen(str);
+
+    if (len_post == 0) return 1;
+
+	return len_str > len_post && 0 == strcmp(str + len_str - len_post, post);
+}
+
 /* {{{ proto bool str_wrap(string input)
    Wraps the given string into given left- and right-hand-side strings */
 PHP_FUNCTION(str_wrap)
 {
-    char *sausage, *lhs, *rhs;
+    char *input, *lhs, *rhs;
+    zend_bool prevent_rewrap = 0;
 
     unsigned char *c, *end;
-    int sausage_len, lhs_len, rhs_len;
+    int input_len, lhs_len, rhs_len;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &lhs, &lhs_len, &sausage, &sausage_len, &rhs, &rhs_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &lhs, &lhs_len, &input, &input_len, &rhs, &rhs_len, &prevent_rewrap) == FAILURE) {
         RETURN_FALSE;
     }
 
-    sausage = estrndup(sausage, sausage_len);
+    input = estrndup(input, input_len);
     lhs = estrndup(lhs, lhs_len);
     rhs = estrndup(rhs, rhs_len);
 
-    int result_len = lhs_len + sausage_len + rhs_len;
+	if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
+        RETURN_STRINGL(input, input_len, 0)
+	}
+
+	int result_len = lhs_len + input_len + rhs_len;
     char *result = malloc(result_len);
 	result = estrndup(result, result_len);
-    
+
     strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
-    result = strcat(result, sausage);
+    result = strcat(result, input);
     result = strcat(result, rhs);
 
     RETURN_STRINGL(result, result_len, 0)
