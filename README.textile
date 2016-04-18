@@ -9,7 +9,9 @@ Most of that stuff isn't tested that well (though there are unit tests available
 and the API and the behaviour of the functions is likely to change.  You have been warned.
 
 
-h2. str_startswith(haystack, needle, [case_insensitive]) : bool
+h2. Functions
+
+h3. str_startswith(haystack, needle, [case_insensitive]) : bool
 
 Returns true if the string haystack starts with the substring
 needle.  Returns false otherwise.
@@ -18,7 +20,7 @@ If the optional third parameter is set to true, the test is
 performed in a case-insensitive manner.
 
 
-h2. str_endswith(haystack, needle, [case_insensitive]) : bool
+h3. str_endswith(haystack, needle, [case_insensitive]) : bool
 
 Returns true if the string haystack ends with the substring
 needle.  Returns false otherwise.
@@ -27,7 +29,7 @@ If the optional third parameter is set to true, the test is
 performed in a case-insensitive manner.
 
 
-h2. str_contains(haystack, needle, [case_insensitive]) : bool
+h3. str_contains(haystack, needle, [case_insensitive]) : bool
 
 Returns true if the string haystack contains the substring
 needle.  Returns false otherwise.
@@ -36,49 +38,48 @@ If the optional third parameter is set to true, the test is
 performed in a case-insensitive manner.
 
 
-h2. str_isupper(input) : bool
+h3. str_isupper(input) : bool
 
 Returns true if all cased characters in the given input string are
 uppercase and if the string contains at least one cased character.
 Returns false otherwise.
 
 
-h2. str_islower(input) : bool
+h3. str_islower(input) : bool
 
 Returns true if all cased characters in the given input string are
 lowercase and if the string contains at least one cased character.
 Returns false otherwise.
 
 
-h2. str_iswhitespace(input) : bool
+h3. str_iswhitespace(input) : bool
 
 Returns true if the given string is empty or contains whitespace
 characters only.  Returns false otherwise.
 
 
-h2. str_swapcase(input) : string
+h3. str_swapcase(input) : string
 
 Returns the given string with uppercase characters converted to
 their lowercase representations and vice versa. 
 
 
-h2. str_wrap(lhs, input, rhs) : string
+h3. str_wrap(lhs, input, rhs) : string
 
 Returns the given string wrapped with given left-hand-side and
 right-hand-side stringa. 
 
 
-License
--------
+h2. License
 
 All the stuff in here is licensed under the New BSD License. See the
 included LICENSE file for more info.  Have fun!
 
 
-Development notes
------------------
+h2. Development notes
 
-Building
+
+h3. Building
 
 Should you run into issues regarding PHP's buildconf script at some point,
 try forcing autoconf and autoheader to version 2.13.  (Make sure those are
@@ -90,13 +91,12 @@ Not sure why those things still have to be so complicated in the 21st
 century.
 
 
-Running the tests
+h3. Running the tests
 
 $ export TEST_PHP_EXECUTABLE=./sapi/cli/php
 $ php run-tests.php ./ext/str/tests/
 
 
-TODO / ideas
-------------
+h2. TODO / ideas
 
 * str_expandtabs(string) : string
