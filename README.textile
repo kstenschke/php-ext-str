@@ -13,40 +13,38 @@ h2. Functions
 
 h3. str_startswith(haystack, needle, [case_insensitive]) : bool
 
-Returns true if the string haystack starts with the substring needle.  Returns false otherwise.
+Returns true if the string haystack starts with the substring needle. Returns false otherwise.
 
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_endswith(haystack, needle, [case_insensitive]) : bool
 
-Returns true if the string haystack ends with the substring needle.  Returns false otherwise.
+Returns true if the string haystack ends with the substring needle. Returns false otherwise.
 
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_contains(haystack, needle, [case_insensitive]) : bool
 
-Returns true if the string haystack contains the substring needle.  Returns false otherwise.
+Returns true if the string haystack contains the substring needle. Returns false otherwise.
 
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_isupper(input) : bool
 
-Returns true if all cased characters in the given input string are uppercase and if the string contains at least one cased character.
-Returns false otherwise.
+Returns true if all cased characters in the given input string are uppercase and if the string contains at least one cased character. Returns false otherwise.
 
 
 h3. str_islower(input) : bool
 
-Returns true if all cased characters in the given input string are lowercase and if the string contains at least one cased character.
-Returns false otherwise.
+Returns true if all cased characters in the given input string are lowercase and if the string contains at least one cased character. Returns false otherwise.
 
 
 h3. str_iswhitespace(input) : bool
 
-Returns true if the given string is empty or contains whitespace characters only.  Returns false otherwise.
+Returns true if the given string is empty or contains whitespace characters only. Returns false otherwise.
 
 
 h3. str_swapcase(input) : string
@@ -62,7 +60,7 @@ Optionally checks whether the given string already starts and ends with the give
 
 h3. str_startsnumerical(haystack, [allow_negative]) : bool
 
-Returns true if the given string starts with a number, or optionally a negative number.
+Returns true if the given string starts with a number, or optionally a negative number. Returns false otherwise.
 
 
 h2. License
