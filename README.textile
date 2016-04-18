@@ -13,61 +13,50 @@ h2. Functions
 
 h3. str_startswith(haystack, needle, [case_insensitive]) : bool
 
-Returns true if the string haystack starts with the substring
-needle.  Returns false otherwise.
+Returns true if the string haystack starts with the substring needle.  Returns false otherwise.
 
-If the optional third parameter is set to true, the test is
-performed in a case-insensitive manner.
+If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_endswith(haystack, needle, [case_insensitive]) : bool
 
-Returns true if the string haystack ends with the substring
-needle.  Returns false otherwise.
+Returns true if the string haystack ends with the substring needle.  Returns false otherwise.
 
-If the optional third parameter is set to true, the test is
-performed in a case-insensitive manner.
+If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_contains(haystack, needle, [case_insensitive]) : bool
 
-Returns true if the string haystack contains the substring
-needle.  Returns false otherwise.
+Returns true if the string haystack contains the substring needle.  Returns false otherwise.
 
-If the optional third parameter is set to true, the test is
-performed in a case-insensitive manner.
+If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_isupper(input) : bool
 
-Returns true if all cased characters in the given input string are
-uppercase and if the string contains at least one cased character.
+Returns true if all cased characters in the given input string are uppercase and if the string contains at least one cased character.
 Returns false otherwise.
 
 
 h3. str_islower(input) : bool
 
-Returns true if all cased characters in the given input string are
-lowercase and if the string contains at least one cased character.
+Returns true if all cased characters in the given input string are lowercase and if the string contains at least one cased character.
 Returns false otherwise.
 
 
 h3. str_iswhitespace(input) : bool
 
-Returns true if the given string is empty or contains whitespace
-characters only.  Returns false otherwise.
+Returns true if the given string is empty or contains whitespace characters only.  Returns false otherwise.
 
 
 h3. str_swapcase(input) : string
 
-Returns the given string with uppercase characters converted to
-their lowercase representations and vice versa. 
+Returns the given string with uppercase characters converted to their lowercase representations and vice versa. 
 
 
 h3. str_wrap(lhs, input, rhs) : string
 
-Returns the given string wrapped with given left-hand-side and
-right-hand-side stringa. 
+Returns the given string wrapped with given left-hand-side and right-hand-side strings.
 
 
 h2. License
@@ -100,3 +89,6 @@ $ php run-tests.php ./ext/str/tests/
 h2. TODO / ideas
 
 * str_expandtabs(string) : string
+* str_startsnumerical(string) : bool
+* str_random(length, alpha_lower, alpha_upper, numbers, special) : string
+* str_reducecharrepetitions(string, char, max_repetitions) : string
