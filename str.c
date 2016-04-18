@@ -23,6 +23,7 @@ const zend_function_entry str_functions[] = {
     PHP_FE(str_iswhitespace,    NULL)
     PHP_FE(str_swapcase,        NULL)
     PHP_FE(str_contains,        NULL)
+    PHP_FE(str_wrap,            NULL)
     {NULL, NULL, NULL}
 };
 /* }}} */
@@ -110,7 +111,7 @@ PHP_FUNCTION(str_endswith)
     char *needle, *haystack;
     int needle_len, haystack_len, retval;
     zend_bool cs = 0;
-    
+
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b", &haystack, &haystack_len, &needle, &needle_len, &cs) == FAILURE) {
         RETURN_FALSE;
     }
@@ -122,7 +123,7 @@ PHP_FUNCTION(str_endswith)
     if (cs) {
         retval = zend_binary_strncmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);
     } else {
-        retval = zend_binary_strncasecmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);        
+        retval = zend_binary_strncasecmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);
     }
 
     RETURN_BOOL(retval == 0);
@@ -163,7 +164,7 @@ PHP_FUNCTION(str_contains)
         needle_dup = estrndup(needle, needle_len);
         php_strtolower(needle_dup, needle_len);
         found = php_memnstr(haystack_dup, needle_dup, needle_len, haystack_dup + haystack_len);
-        
+
         efree(haystack_dup);
         efree(needle_dup);
     }
@@ -173,7 +174,7 @@ PHP_FUNCTION(str_contains)
 /* }}} */
 
 /* {{{ proto bool str_isupper(string input)
-   Checks if all cased characters in the given input string are uppercase and if the 
+   Checks if all cased characters in the given input string are uppercase and if the
    string contains at least one cased character. */
 PHP_FUNCTION(str_isupper)
 {
@@ -192,15 +193,15 @@ PHP_FUNCTION(str_isupper)
     if (input_len == 0) {
         RETURN_FALSE;
     }
-    
+
     /* Shortcut for strings that consist of just a single character. */
     if (input_len == 1) {
         RETURN_BOOL(isupper(*input) != 0)
     }
-    
+
     for (end = input + input_len; input < end; input++) {
         c = *input;
-        
+
         if (islower(c)) {
             RETURN_FALSE;
         }
@@ -209,13 +210,13 @@ PHP_FUNCTION(str_isupper)
             has_cased_char = 1;
         }
     }
-    
+
     RETURN_BOOL(has_cased_char == 1);
 }
 /* }}} */
 
 /* {{{ proto bool str_islower(string input)
-   Checks if all cased characters in the given input string are lowercase and if the 
+   Checks if all cased characters in the given input string are lowercase and if the
    string contains at least one cased character. */
 PHP_FUNCTION(str_islower)
 {
@@ -234,15 +235,15 @@ PHP_FUNCTION(str_islower)
     if (input_len == 0) {
         RETURN_FALSE;
     }
-    
+
     /* Shortcut for strings that consist of just a single character. */
     if (input_len == 1) {
         RETURN_BOOL(islower(*input) != 0)
     }
-    
+
     for (end = input + input_len; input < end; input++) {
         c = *input;
-        
+
         if (isupper(c)) {
             RETURN_FALSE;
         }
@@ -251,7 +252,7 @@ PHP_FUNCTION(str_islower)
             has_cased_char = 1;
         }
     }
-    
+
     RETURN_BOOL(has_cased_char == 1);
 }
 /* }}} */
@@ -274,12 +275,12 @@ PHP_FUNCTION(str_iswhitespace)
     if (input_len == 0) {
         RETURN_TRUE;
     }
-    
+
     /* Shortcut for strings that consist of just a single character. */
     if (input_len == 1) {
         RETURN_BOOL(isspace(*input))
     }
-    
+
     for (end = input + input_len; input < end; input++) {
         if (!isspace(*input)) {
             RETURN_FALSE;
@@ -319,6 +320,35 @@ PHP_FUNCTION(str_swapcase)
     }
 
     RETURN_STRINGL(input, input_len, 0)
+}
+/* }}} */
+
+/* {{{ proto bool str_wrap(string input)
+   Wraps the given string into given left- and right-hand-side strings */
+PHP_FUNCTION(str_wrap)
+{
+    char *sausage, *lhs, *rhs;
+
+    unsigned char *c, *end;
+    int sausage_len, lhs_len, rhs_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &lhs, &lhs_len, &sausage, &sausage_len, &rhs, &rhs_len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    sausage = estrndup(sausage, sausage_len);
+    lhs = estrndup(lhs, lhs_len);
+    rhs = estrndup(rhs, rhs_len);
+
+    int result_len = lhs_len + sausage_len + rhs_len;
+    char *result = malloc(result_len);
+	result = estrndup(result, result_len);
+    
+    strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
+    result = strcat(result, sausage);
+    result = strcat(result, rhs);
+
+    RETURN_STRINGL(result, result_len, 0)
 }
 /* }}} */
 
