@@ -88,6 +88,7 @@ $ php run-tests.php ./ext/str/tests/
 
 h2. TODO / ideas
 
+* extend str_wrap with additional optional parameter: prevent_doublewrapping
 * str_expandtabs(string) : string
 * str_startsnumerical(string) : bool
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string
