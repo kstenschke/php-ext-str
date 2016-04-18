@@ -58,6 +58,12 @@ Returns the given string with uppercase characters converted to
 their lowercase representations and vice versa. 
 
 
+str_wrap(lhs, input, rhs) : string
+
+Returns the given string wrapped with given left-hand-side and
+right-hand-side stringa. 
+
+
 License
 -------
 
