@@ -1,11 +1,15 @@
-ext/str
+h1. ext/str
 
-Set of utility functions for strings in PHP.  I made those primarily
-for personal entertainment.  Most of that stuff isn't tested that well
-(though there are unit tests available) and the API and the behaviour
-of the functions is likely to change.  You have been warned.
+Set of utility functions for strings in PHP.  
 
-str_startswith(haystack, needle, [case_insensitive]) : bool
+Started in 2011 by Martin Jansen, primarily for personal entertainment. 
+Extended in 2016 by Kay Stenschke.
+
+Most of that stuff isn't tested that well (though there are unit tests available) 
+and the API and the behaviour of the functions is likely to change.  You have been warned.
+
+
+h2. str_startswith(haystack, needle, [case_insensitive]) : bool
 
 Returns true if the string haystack starts with the substring
 needle.  Returns false otherwise.
@@ -14,7 +18,7 @@ If the optional third parameter is set to true, the test is
 performed in a case-insensitive manner.
 
 
-str_endswith(haystack, needle, [case_insensitive]) : bool
+h2. str_endswith(haystack, needle, [case_insensitive]) : bool
 
 Returns true if the string haystack ends with the substring
 needle.  Returns false otherwise.
@@ -23,7 +27,7 @@ If the optional third parameter is set to true, the test is
 performed in a case-insensitive manner.
 
 
-str_contains(haystack, needle, [case_insensitive]) : bool
+h2. str_contains(haystack, needle, [case_insensitive]) : bool
 
 Returns true if the string haystack contains the substring
 needle.  Returns false otherwise.
@@ -32,33 +36,33 @@ If the optional third parameter is set to true, the test is
 performed in a case-insensitive manner.
 
 
-str_isupper(input) : bool
+h2. str_isupper(input) : bool
 
 Returns true if all cased characters in the given input string are
 uppercase and if the string contains at least one cased character.
 Returns false otherwise.
 
 
-str_islower(input) : bool
+h2. str_islower(input) : bool
 
 Returns true if all cased characters in the given input string are
 lowercase and if the string contains at least one cased character.
 Returns false otherwise.
 
 
-str_iswhitespace(input) : bool
+h2. str_iswhitespace(input) : bool
 
 Returns true if the given string is empty or contains whitespace
 characters only.  Returns false otherwise.
 
 
-str_swapcase(input) : string
+h2. str_swapcase(input) : string
 
 Returns the given string with uppercase characters converted to
 their lowercase representations and vice versa. 
 
 
-str_wrap(lhs, input, rhs) : string
+h2. str_wrap(lhs, input, rhs) : string
 
 Returns the given string wrapped with given left-hand-side and
 right-hand-side stringa. 
