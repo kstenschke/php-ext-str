@@ -54,9 +54,10 @@ h3. str_swapcase(input) : string
 Returns the given string with uppercase characters converted to their lowercase representations and vice versa.
 
 
-h3. str_wrap(lhs, input, rhs) : string
+h3. str_wrap(lhs, input, rhs, [prevent_rewrap]) : string
 
 Returns the given string wrapped with given left-hand-side and right-hand-side strings.
+Optionally checks whether the given string already starts and ends with the given left- and right-hand-side wraps, returns the unaltered input string than.
 
 
 h2. License
