@@ -90,6 +90,7 @@ $ php run-tests.php ./ext/str/tests/
 h2. TODO / ideas
 
 * str_expandtabs(string) : string
+* str_intexplode(string) : int[]
 * str_startsnumerical(string) : bool
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
