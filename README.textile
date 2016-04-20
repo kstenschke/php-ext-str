@@ -74,11 +74,13 @@ h2. Development notes
 
 h3. Building
 
+bc. phpize; ./configure; make -B
+
 Should you run into issues regarding PHP's buildconf script at some point,
 try forcing autoconf and autoheader to version 2.13.  (Make sure those are
 installed, of course.)
 
-$ PHP_AUTOHEADER=autoheader213 PHP_AUTOCONF=autoconf213 ./buildconf
+bc. $ PHP_AUTOHEADER=autoheader213 PHP_AUTOCONF=autoconf213 ./buildconf
 
 Not sure why those things still have to be so complicated in the 21st
 century.
@@ -86,7 +88,7 @@ century.
 
 h3. Running the tests
 
-$ export TEST_PHP_EXECUTABLE=./sapi/cli/php
+bc. $ export TEST_PHP_EXECUTABLE=./sapi/cli/php
 $ php run-tests.php ./ext/str/tests/
 
 
