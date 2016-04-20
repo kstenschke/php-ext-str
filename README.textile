@@ -76,7 +76,7 @@ h3. Building
 
 bc. $ phpize
 $ ./configure
-$make -B
+$ make -B
 
 Should you run into issues regarding PHP's buildconf script at some point,
 try forcing autoconf and autoheader to version 2.13.  (Make sure those are
