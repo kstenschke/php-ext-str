@@ -102,6 +102,6 @@ $ php run-tests.php ./ext/str/tests/
 h2. TODO / ideas
 
 * str_expandtabs(string) : string
-* str_intexplode(string) : int[]
+* add options to str_intexplode - unique, positive
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
