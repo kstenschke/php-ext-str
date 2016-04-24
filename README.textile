@@ -63,6 +63,11 @@ h3. str_startsnumerical(haystack, [allow_negative]) : bool
 Returns true if the given string starts with a number, or optionally a negative number. Returns false otherwise.
 
 
+h3. str_intexplode(haystack, [delimiter]) : int[]
+
+Splits the given string by the given delimiter (or default: ",") into integers.
+
+
 h2. License
 
 All the stuff in here is licensed under the New BSD License. See the

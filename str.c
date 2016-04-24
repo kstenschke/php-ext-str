@@ -25,6 +25,7 @@ const zend_function_entry str_functions[] = {
     PHP_FE(str_contains,        NULL)
     PHP_FE(str_wrap,            NULL)
     PHP_FE(str_startsnumerical, NULL)
+    PHP_FE(str_intexplode,      NULL)
     {NULL, NULL, NULL}
 };
 /* }}} */
@@ -351,12 +352,12 @@ char* subString (const char* input, int offset, int len, char* dest)
 bool endsWith(const char *post, const char *str)
 {
     if (str == NULL || post == NULL) return 0;
-
+    
     size_t len_post = strlen(post),
            len_str = strlen(str);
 
     if (len_post == 0) return 1;
-
+               
 	return len_str > len_post && 0 == strcmp(str + len_str - len_post, post);
 }
 
@@ -377,19 +378,19 @@ PHP_FUNCTION(str_wrap)
     input = estrndup(input, input_len);
     lhs = estrndup(lhs, lhs_len);
     rhs = estrndup(rhs, rhs_len);
-
+    
 	if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
         RETURN_STRINGL(input, input_len, 0)
 	}
-
+	
 	int result_len = lhs_len + input_len + rhs_len;
     char *result = malloc(result_len);
 	result = estrndup(result, result_len);
-
+    
     strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
     result = strcat(result, input);
     result = strcat(result, rhs);
-
+	
     RETURN_STRINGL(result, result_len, 0)
 }
 /* }}} */
@@ -410,7 +411,50 @@ PHP_FUNCTION(str_startsnumerical)
         RETURN_FALSE;
     }
 
-    RETURN_BOOL(isdigit(haystack[0]) || allow_negative && haystack_len > 1 && ('-' == haystack[0]) && isdigit(haystack[1]));
+    RETURN_BOOL( isdigit(haystack[0]) || (allow_negative && haystack_len > 1 && ('-' == haystack[0]) && isdigit(haystack[1])) );
+}
+/* }}} */
+
+long strToLong(char *str) {
+   if (str == NULL) return 0;
+   
+   char *ptr; /* pointer to offset after initial number(s) */
+
+   return strtol(str, &ptr, 10);
+}
+   
+/* {{{ proto bool str_wrap(string input)
+   Split the given string by "," or the optional given delimiter, into an array of integers. */
+PHP_FUNCTION(str_intexplode)
+{
+    char *haystack, *delimiter;
+    zend_bool unique;
+    int haystack_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bs", &haystack, &haystack_len, &unique, &delimiter) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    zval *arr;
+    MAKE_STD_ZVAL(arr);
+    array_init(arr);
+    
+    if (haystack_len > 0) {
+    	int delimiter_len = strlen(delimiter);
+    	
+    	if (delimiter_len > 0) {
+			char *item;
+			char *itemWrappedInDelimiter;
+				
+			while ( (item = strsep(&haystack, ",")) ) {
+				long number = atol(item);
+				add_next_index_long(arr, number);
+			}
+		}
+    }
+
+    RETVAL_ZVAL(arr, 0, 0);
+    efree(arr);
 }
 /* }}} */
 
