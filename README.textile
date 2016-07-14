@@ -105,3 +105,4 @@ h2. TODO / ideas
 * add options to str_intexplode - unique, positive
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
+* arr_strtolower - perform strtolower() on all items of given array
