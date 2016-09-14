@@ -479,12 +479,14 @@ PHP_FUNCTION(str_unwrap)
 
     if (startsWithLhs) {
         strncpy(result, input + lhs_len, input_len - lhs_len);
-        // if only LHS or both LHS + RHS are found, RHS does not need to be removed, as it's cut-off via the available buffer length
+        // if both LHS + RHS are found, RHS does not need to be removed, as it's cut-off via the available buffer length
     } else {
-        result = input;
+        if (endsWithRhs) {
+            strncpy(result, input, input_len - rhs_len);
+        } else {
+            result = input;
+        }
     }
-
-     // @todo implement reduce result if only RHS was found
 
     RETURN_STRINGL(result, result_len_fin, 0)
 }
