@@ -11,21 +11,21 @@ and the API and the behaviour of the functions is likely to change.  You have be
 
 h2. Functions
 
-h3. str_startswith(haystack, needle, [case_insensitive]) : bool
+h3. str_startswith(haystack, needle [, case_sensitive = false]) : bool
 
 Returns true if the string haystack starts with the substring needle. Returns false otherwise.
 
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
-h3. str_endswith(haystack, needle, [case_insensitive]) : bool
+h3. str_endswith(haystack, needle [, case_sensitive = false]) : bool
 
 Returns true if the string haystack ends with the substring needle. Returns false otherwise.
 
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
-h3. str_contains(haystack, needle, [case_insensitive]) : bool
+h3. str_contains(haystack, needle [, case_sensitive = false]) : bool
 
 Returns true if the string haystack contains the substring needle. Returns false otherwise.
 
@@ -52,7 +52,7 @@ h3. str_swapcase(input) : string
 Returns the given string with uppercase characters converted to their lowercase representations and vice versa.
 
 
-h3. str_wrap(lhs, input, rhs, [prevent_rewrap]) : string
+h3. str_wrap(lhs, input, rhs [, prevent_rewrap = false]) : string
 
 Returns the given string wrapped with given left-hand-side and right-hand-side strings.
 Optionally checks whether the given string already starts and ends with the given left- and right-hand-side wraps, returns the unaltered input string than.
@@ -63,12 +63,12 @@ h3. str_unwrap(input, lhs, rhs) : string
 Unwraps the given string (removes given left- and right-hand-side strings, if found)
 
 
-h3. str_startsnumerical(haystack, [allow_negative]) : bool
+h3. str_startsnumerical(haystack [, allow_negative = false]) : bool
 
 Returns true if the given string starts with a number, or optionally a negative number. Returns false otherwise.
 
 
-h3. str_intexplode(haystack, [delimiter]) : int[]
+h3. str_intexplode(haystack [, delimiter = ',']) : int[]
 
 Splits the given string by the given delimiter (or default: ",") into integers.
 
