@@ -106,8 +106,11 @@ $ php run-tests.php ./ext/str/tests/
 
 h2. TODO / ideas
 
-* str_expandtabs(string) : string
 * add options to str_intexplode - unique, positive
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
+* str_removenonnumericchars($str, $convertToInt = false) - Reduce given string to its contained numbers
+* str_formatamountdigits($str, $digits) - format numeric string to given amount of digits
+* str_tocamelcase($string, $delimiter = ' ', $upperCaseFirstLetter = false)
+* str_cameltowords($string, $glue = ' ', $upperCaseFirstLetter = true)
 * arr_strtolower - perform strtolower() on all items of given array
