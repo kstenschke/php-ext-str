@@ -58,6 +58,11 @@ Returns the given string wrapped with given left-hand-side and right-hand-side s
 Optionally checks whether the given string already starts and ends with the given left- and right-hand-side wraps, returns the unaltered input string than.
 
 
+h3. str_unwrap(input, lhs, rhs) : string
+
+Unwraps the given string (removes given left- and right-hand-side strings, if found)
+
+
 h3. str_startsnumerical(haystack, [allow_negative]) : bool
 
 Returns true if the given string starts with a number, or optionally a negative number. Returns false otherwise.
@@ -106,4 +111,3 @@ h2. TODO / ideas
 * str_random(length, alpha_lower, alpha_upper, numbers, special) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
 * arr_strtolower - perform strtolower() on all items of given array
-* str_unwrap

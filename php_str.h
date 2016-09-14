@@ -30,6 +30,7 @@ PHP_FUNCTION(str_iswhitespace);
 PHP_FUNCTION(str_swapcase);
 PHP_FUNCTION(str_contains);
 PHP_FUNCTION(str_wrap);
+PHP_FUNCTION(str_unwrap);
 PHP_FUNCTION(str_startsnumerical);
 PHP_FUNCTION(str_intexplode);
 

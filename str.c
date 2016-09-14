@@ -26,6 +26,7 @@ const zend_function_entry str_functions[] = {
     PHP_FE(str_wrap,            NULL)
     PHP_FE(str_startsnumerical, NULL)
     PHP_FE(str_intexplode,      NULL)
+    PHP_FE(str_unwrap,          NULL)
     {NULL, NULL, NULL}
 };
 /* }}} */
@@ -390,7 +391,7 @@ PHP_FUNCTION(str_wrap)
 }
 /* }}} */
 
-/* {{{ proto bool str_wrap(string input)
+/* {{{ proto bool str_startsnumerical(string input)
    Checks whether the given string starts with a number, or optional a negative number. */
 PHP_FUNCTION(str_startsnumerical)
 {
@@ -450,6 +451,42 @@ PHP_FUNCTION(str_intexplode)
 
     RETVAL_ZVAL(arr, 0, 0);
     efree(arr);
+}
+/* }}} */
+
+/* {{{ proto string str_unwrap(string input, string lhs, string rhs)
+   Unwraps the given string (removes given left- and right-hand-side strings if found) */
+PHP_FUNCTION(str_unwrap)
+{
+    char *input, *lhs, *rhs;
+    unsigned char *c, *end;
+    int input_len, lhs_len, rhs_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &input, &input_len, &lhs, &lhs_len, &rhs, &rhs_len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    input = estrndup(input, input_len);
+    lhs = estrndup(lhs, lhs_len);
+    rhs = estrndup(rhs, rhs_len);
+
+    bool startsWithLhs = startsWith(lhs, input);
+    bool endsWithRhs   = endsWith(rhs, input);
+
+	int result_len_fin = input_len - (startsWithLhs ? lhs_len : 0) - (endsWithRhs ? rhs_len : 0);
+    char *result = malloc(result_len_fin);
+	result = estrndup(result, result_len_fin);
+
+    if (startsWithLhs) {
+        strncpy(result, input + lhs_len, input_len - lhs_len);
+        // if only LHS or both LHS + RHS are found, RHS does not need to be removed, as it's cut-off via the available buffer length
+    } else {
+        result = input;
+    }
+
+     // @todo implement reduce result if only RHS was found
+
+    RETURN_STRINGL(result, result_len_fin, 0)
 }
 /* }}} */
 
