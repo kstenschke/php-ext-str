@@ -231,14 +231,12 @@ PHP_FUNCTION(str_islower)
         RETURN_FALSE;
     }
 
-    /* A string must at least contain one cased character in order to
-     * yield a positive result.
-     */
+    // A string must at least contain one cased character in order to yield a positive result.
     if (input_len == 0) {
         RETURN_FALSE;
     }
 
-    /* Shortcut for strings that consist of just a single character. */
+    // Shortcut for strings that consist of just a single character.
     if (input_len == 1) {
         RETURN_BOOL(islower(*input) != 0)
     }
@@ -271,14 +269,12 @@ PHP_FUNCTION(str_iswhitespace)
         RETURN_FALSE;
     }
 
-    /* Empty strings yield a positive result.  Need to think about this some
-     * more.
-     */
+    // Empty strings yield a positive result.  Need to think about this some more.
     if (input_len == 0) {
         RETURN_TRUE;
     }
 
-    /* Shortcut for strings that consist of just a single character. */
+    // Shortcut for strings that consist of just a single character.
     if (input_len == 1) {
         RETURN_BOOL(isspace(*input))
     }
@@ -294,8 +290,7 @@ PHP_FUNCTION(str_iswhitespace)
 /* }}} */
 
 /* {{{ proto bool str_swapcase(string input)
-   Converts uppercase characters in the given string to their
-   lowercase representations and vice versa. */
+   Converts uppercase characters in the given string to their lowercase representations and vice versa. */
 PHP_FUNCTION(str_swapcase)
 {
     char *input;
@@ -352,16 +347,16 @@ char* subString (const char* input, int offset, int len, char* dest)
 bool endsWith(const char *post, const char *str)
 {
     if (str == NULL || post == NULL) return 0;
-    
+
     size_t len_post = strlen(post),
            len_str = strlen(str);
 
     if (len_post == 0) return 1;
-               
+
 	return len_str > len_post && 0 == strcmp(str + len_str - len_post, post);
 }
 
-/* {{{ proto bool str_wrap(string input)
+/* {{{ proto string str_wrap(string input, string lhs, string rhs)
    Wraps the given string into given left- and right-hand-side strings */
 PHP_FUNCTION(str_wrap)
 {
@@ -378,19 +373,19 @@ PHP_FUNCTION(str_wrap)
     input = estrndup(input, input_len);
     lhs = estrndup(lhs, lhs_len);
     rhs = estrndup(rhs, rhs_len);
-    
+
 	if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
         RETURN_STRINGL(input, input_len, 0)
 	}
-	
+
 	int result_len = lhs_len + input_len + rhs_len;
     char *result = malloc(result_len);
 	result = estrndup(result, result_len);
-    
+
     strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
     result = strcat(result, input);
     result = strcat(result, rhs);
-	
+
     RETURN_STRINGL(result, result_len, 0)
 }
 /* }}} */
@@ -417,13 +412,13 @@ PHP_FUNCTION(str_startsnumerical)
 
 long strToLong(char *str) {
    if (str == NULL) return 0;
-   
+
    char *ptr; /* pointer to offset after initial number(s) */
 
    return strtol(str, &ptr, 10);
 }
-   
-/* {{{ proto bool str_wrap(string input)
+
+/* {{{ proto bool str_intexplode(string input)
    Split the given string by "," or the optional given delimiter, into an array of integers. */
 PHP_FUNCTION(str_intexplode)
 {
@@ -438,14 +433,14 @@ PHP_FUNCTION(str_intexplode)
     zval *arr;
     MAKE_STD_ZVAL(arr);
     array_init(arr);
-    
+
     if (haystack_len > 0) {
     	int delimiter_len = strlen(delimiter);
-    	
+
     	if (delimiter_len > 0) {
 			char *item;
 			char *itemWrappedInDelimiter;
-				
+
 			while ( (item = strsep(&haystack, ",")) ) {
 				long number = atol(item);
 				add_next_index_long(arr, number);
