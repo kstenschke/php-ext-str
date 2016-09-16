@@ -11,24 +11,15 @@ and the API and the behaviour of the functions is likely to change.  You have be
 
 h2. Functions
 
-h3. str_startswith(haystack, needle [, case_sensitive = false]) : bool
+h3. str_contains(haystack, needle [, case_sensitive = false]) : bool
 
-Returns true if the string haystack starts with the substring needle. Returns false otherwise.
-
+Returns true if the string haystack contains the substring needle. Returns false otherwise.
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_endswith(haystack, needle [, case_sensitive = false]) : bool
 
 Returns true if the string haystack ends with the substring needle. Returns false otherwise.
-
-If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
-
-
-h3. str_contains(haystack, needle [, case_sensitive = false]) : bool
-
-Returns true if the string haystack contains the substring needle. Returns false otherwise.
-
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
@@ -60,6 +51,12 @@ Generates a (mostly) speakable random string of given length and options.
 h3. str_startsnumerical(haystack [, allow_negative = false]) : bool
 
 Returns true if the given string starts with a number, or optionally a negative number. Returns false otherwise.
+
+
+h3. str_startswith(haystack, needle [, case_sensitive = false]) : bool
+
+Returns true if the string haystack starts with the substring needle. Returns false otherwise.
+If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
 h3. str_swapcase(input) : string
