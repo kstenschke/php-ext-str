@@ -492,22 +492,83 @@ PHP_FUNCTION(str_unwrap)
 }
 /* }}} */
 
-/* {{{ proto string str_unwrap(string input, string lhs, string rhs)
-   Unwraps the given string (removes given left- and right-hand-side strings if found) */
+/* {{{ proto string str_random(int length)
+   Generates a speakable random string */
 PHP_FUNCTION(str_random)
 {
     int len;
+    zend_bool upper, number, special;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|bbb", &len, &upper, &number, &special) == FAILURE) {
         RETURN_FALSE;
     }
 
     // len + 1 for nul character.
     char *str = emalloc(len + 1);
 
-    for (int i = 0; i <= len; i++) {
-        str[i] = 'a';
+    bool has_upper   = false;
+    bool has_number  = false;
+    bool has_special = false;
+
+    int offset, type;
+    int last = 0;
+    int i = 0;
+
+    while ((upper && has_upper == false) ) {
+        has_upper   = false;
+        has_number  = false;
+        has_special = false;
+
+        last = 0;
+        i = 0;
+
+        while (i <= len) {
+            type = random() % 10;
+
+            // Avoid some cases
+            if(last == 3) {
+                type = 1;
+            } else if(last == 2) {
+                type = 1;
+            } else if(last == 1) {
+                type = (rand() % 5) == 1 ? 10 : 2;
+            }
+
+            // Generate
+            if(type < 4) {
+                // Vowels
+                if (upper && !has_upper && (random() % 10) > 8) {
+                    str[i] = "AEIOU"[random() % 5];
+                    has_upper = true;
+                } else {
+                    str[i] = "aeiou"[random() % 5];
+                }
+                i++;
+                last = 1;
+            } else if(type < 9) {
+                // Consonants
+                if (upper && !has_upper && (random() % 10) > 8) {
+                    str[i] = "BCDFGHJKLMNOPQRSTVWXZ"[random() % 21];
+                    has_upper = true;
+                } else {
+                    str[i] = "bcdfghjklmnopqrstvwxz"[random() % 21];
+                }
+                i++;
+                last = 2;
+            } else {
+                // Speakable consonant pairs
+                offset = (random () % 33) * 2 - 1;
+                str[i]     = "blbrclcrdrdwflfrglgrgwknkrkwmrphplpnprpsscshskslsmsnspstsvswtrtswh"[offset];
+                i++;
+                if (i < len) {
+                    str[i] = "blbrclcrdrdwflfrglgrgwknkrkwmrphplpnprpsscshskslsmsnspstsvswtrtswh"[offset + 1];
+                    i++;
+                }
+                last = 3;
+            }
+        }
     }
+
     str[len] = 0;
 
     RETURN_STRINGL(str, len, 0);

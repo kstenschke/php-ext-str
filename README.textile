@@ -107,7 +107,7 @@ $ php run-tests.php ./ext/str/tests/
 h2. TODO / ideas
 
 * add options to str_intexplode - unique, positive
-* str_random(length, alpha_lower, alpha_upper, numbers, special) : string
+* str_random(length, upper = true, number = true, special = true) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
 * str_removenonnumericchars($str, $convertToInt = false) - Reduce given string to its contained numbers
 * str_formatamountdigits($str, $digits) - format numeric string to given amount of digits
