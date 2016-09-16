@@ -33,6 +33,7 @@ PHP_FUNCTION(str_wrap);
 PHP_FUNCTION(str_unwrap);
 PHP_FUNCTION(str_startsnumerical);
 PHP_FUNCTION(str_intexplode);
+PHP_FUNCTION(str_random);
 
 /*
     Declare any global variables you may need between the BEGIN

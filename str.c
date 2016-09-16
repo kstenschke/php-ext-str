@@ -27,6 +27,7 @@ const zend_function_entry str_functions[] = {
     PHP_FE(str_startsnumerical, NULL)
     PHP_FE(str_intexplode,      NULL)
     PHP_FE(str_unwrap,          NULL)
+    PHP_FE(str_random,          NULL)
     {NULL, NULL, NULL}
 };
 /* }}} */
@@ -459,7 +460,6 @@ PHP_FUNCTION(str_intexplode)
 PHP_FUNCTION(str_unwrap)
 {
     char *input, *lhs, *rhs;
-    unsigned char *c, *end;
     int input_len, lhs_len, rhs_len;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &input, &input_len, &lhs, &lhs_len, &rhs, &rhs_len) == FAILURE) {
@@ -488,7 +488,29 @@ PHP_FUNCTION(str_unwrap)
         }
     }
 
-    RETURN_STRINGL(result, result_len_fin, 0)
+    RETURN_STRINGL(result, result_len_fin, 0);
+}
+/* }}} */
+
+/* {{{ proto string str_unwrap(string input, string lhs, string rhs)
+   Unwraps the given string (removes given left- and right-hand-side strings if found) */
+PHP_FUNCTION(str_random)
+{
+    int len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    // len + 1 for nul character.
+    char *str = emalloc(len + 1);
+
+    for (int i = 0; i <= len; i++) {
+        str[i] = 'a';
+    }
+    str[len] = 0;
+
+    RETURN_STRINGL(str, len, 0);
 }
 /* }}} */
 
