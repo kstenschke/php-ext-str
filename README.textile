@@ -111,6 +111,7 @@ h2. TODO / ideas
 * str_reducecharrepetitions(string, char, max_repetitions) : string
 * str_removenonnumericchars($str, $convertToInt = false) - Reduce given string to its contained numbers
 * str_formatamountdigits($str, $digits) - format numeric string to given amount of digits
-* str_tocamelcase($string, $delimiter = ' ', $upperCaseFirstLetter = false)
+* str_camelize($string, $delimiter = ' ', $upperCaseFirstLetter = false)
 * str_cameltowords($string, $glue = ' ', $upperCaseFirstLetter = true)
+* str_between(string, lhs, rhs, offsetLhs = 0, offsetRhs = 0) - get substring after/before/inbetween lhs/rhs
 * arr_strtolower - perform strtolower() on all items of given array
