@@ -514,7 +514,7 @@ PHP_FUNCTION(str_random)
     int last = 0;
     int i = 0;
 
-    while ((upper && has_upper == false) ) {
+    while ((upper && has_upper == false) || (number && has_number == false) ) {
         has_upper   = false;
         has_number  = false;
         has_special = false;
@@ -540,6 +540,9 @@ PHP_FUNCTION(str_random)
                 if (upper && !has_upper && (random() % 10) > 8) {
                     str[i] = "AEIOU"[random() % 5];
                     has_upper = true;
+                } else if (number && !has_number && (random() % 10) > 8) {
+                    str[i] = "0123456789"[random() % 10];
+                    has_number = true;
                 } else {
                     str[i] = "aeiou"[random() % 5];
                 }
