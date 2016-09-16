@@ -32,9 +32,9 @@ Returns true if the string haystack contains the substring needle. Returns false
 If the optional third parameter is set to true, the test is performed in a case-insensitive manner.
 
 
-h3. str_isupper(input) : bool
+h3. str_intexplode(haystack [, delimiter = ',']) : int[]
 
-Returns true if all cased characters in the given input string are uppercase and if the string contains at least one cased character. Returns false otherwise.
+Splits the given string by the given delimiter (or default: ",") into integers.
 
 
 h3. str_islower(input) : bool
@@ -42,25 +42,19 @@ h3. str_islower(input) : bool
 Returns true if all cased characters in the given input string are lowercase and if the string contains at least one cased character. Returns false otherwise.
 
 
+h3. str_isupper(input) : bool
+
+Returns true if all cased characters in the given input string are uppercase and if the string contains at least one cased character. Returns false otherwise.
+
+
 h3. str_iswhitespace(input) : bool
 
 Returns true if the given string is empty or contains whitespace characters only. Returns false otherwise.
 
 
-h3. str_swapcase(input) : string
+h3. str_random(int length [, bool upper = true, bool number = true, bool special = true])
 
-Returns the given string with uppercase characters converted to their lowercase representations and vice versa.
-
-
-h3. str_wrap(lhs, input, rhs [, prevent_rewrap = false]) : string
-
-Returns the given string wrapped with given left-hand-side and right-hand-side strings.
-Optionally checks whether the given string already starts and ends with the given left- and right-hand-side wraps, returns the unaltered input string than.
-
-
-h3. str_unwrap(input, lhs, rhs) : string
-
-Unwraps the given string (removes given left- and right-hand-side strings, if found)
+Generates a (mostly) speakable random string of given length and options.
 
 
 h3. str_startsnumerical(haystack [, allow_negative = false]) : bool
@@ -68,9 +62,20 @@ h3. str_startsnumerical(haystack [, allow_negative = false]) : bool
 Returns true if the given string starts with a number, or optionally a negative number. Returns false otherwise.
 
 
-h3. str_intexplode(haystack [, delimiter = ',']) : int[]
+h3. str_swapcase(input) : string
 
-Splits the given string by the given delimiter (or default: ",") into integers.
+Returns the given string with uppercase characters converted to their lowercase representations and vice versa.
+
+
+h3. str_unwrap(input, lhs, rhs) : string
+
+Unwraps the given string (removes given left- and right-hand-side strings, if found)
+
+
+h3. str_wrap(lhs, input, rhs [, prevent_rewrap = false]) : string
+
+Returns the given string wrapped with given left-hand-side and right-hand-side strings.
+Optionally checks whether the given string already starts and ends with the given left- and right-hand-side wraps, returns the unaltered input string than.
 
 
 h2. License
@@ -107,7 +112,6 @@ $ php run-tests.php ./ext/str/tests/
 h2. TODO / ideas
 
 * add options to str_intexplode - unique, positive
-* str_random(length, upper = true, number = true, special = true) : string
 * str_reducecharrepetitions(string, char, max_repetitions) : string
 * str_removenonnumericchars($str, $convertToInt = false) - Reduce given string to its contained numbers
 * str_formatamountdigits($str, $digits) - format numeric string to given amount of digits

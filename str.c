@@ -492,8 +492,8 @@ PHP_FUNCTION(str_unwrap)
 }
 /* }}} */
 
-/* {{{ proto string str_random(int length)
-   Generates a speakable random string */
+/* {{{ proto string str_random(int length, bool upper, bool number, bool special)
+   Generates a (mostly) speakable random string */
 PHP_FUNCTION(str_random)
 {
     int len;
@@ -508,22 +508,22 @@ PHP_FUNCTION(str_random)
 
     bool has_upper   = false;
     bool has_number  = false;
-    bool has_special = false;
 
     int offset, type;
     int last = 0;
+    int offset_special = random() % (len - 1);
     int i = 0;
+    char c, last_vowel = '-';
 
-    while ((upper && has_upper == false) || (number && has_number == false) ) {
+    while ((upper && has_upper == false) || (number && has_number == false)) {
         has_upper   = false;
         has_number  = false;
-        has_special = false;
 
         last = 0;
         i = 0;
 
         while (i <= len) {
-            type = random() % 10;
+            type = random() % 20;
 
             // Avoid some cases
             if(last == 3) {
@@ -536,7 +536,7 @@ PHP_FUNCTION(str_random)
 
             // Generate
             if(type < 4) {
-                // Vowels
+                // Vowels, numbers
                 if (upper && !has_upper && (random() % 10) > 8) {
                     str[i] = "AEIOU"[random() % 5];
                     has_upper = true;
@@ -544,12 +544,17 @@ PHP_FUNCTION(str_random)
                     str[i] = "0123456789"[random() % 10];
                     has_number = true;
                 } else {
-                    str[i] = "aeiou"[random() % 5];
+                    do {
+                        str[i] = "aeiou"[random() % 5];
+                        // prevent repeating the same lower-case vowel
+                    } while(str[i] == last_vowel);
+
+                    last_vowel = str[i];
                 }
                 i++;
                 last = 1;
             } else if(type < 9) {
-                // Consonants
+                // Consonants, special chars
                 if (upper && !has_upper && (random() % 10) > 8) {
                     str[i] = "BCDFGHJKLMNOPQRSTVWXZ"[random() % 21];
                     has_upper = true;
@@ -560,16 +565,20 @@ PHP_FUNCTION(str_random)
                 last = 2;
             } else {
                 // Speakable consonant pairs
-                offset = (random () % 33) * 2 - 1;
+                offset = (((random () % 32) + 1) * 2) - 1;
                 str[i]     = "blbrclcrdrdwflfrglgrgwknkrkwmrphplpnprpsscshskslsmsnspstsvswtrtswh"[offset];
                 i++;
-                if (i < len) {
+                if (i <= len) {
                     str[i] = "blbrclcrdrdwflfrglgrgwknkrkwmrphplpnprpsscshskslsmsnspstsvswtrtswh"[offset + 1];
                     i++;
                 }
                 last = 3;
             }
         }
+    }
+
+    if (special) {
+        str[random() % (len - 1)] = "!#$%&()*+,-.:;<=>?[]_|"[random() % 22];
     }
 
     str[len] = 0;
