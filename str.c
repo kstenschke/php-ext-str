@@ -16,18 +16,18 @@ static int le_str;
  * Every user visible function must have an entry in str_functions[].
  */
 const zend_function_entry str_functions[] = {
-    PHP_FE(str_startswith,      NULL)
-    PHP_FE(str_endswith,        NULL)
-    PHP_FE(str_isupper,         NULL)
-    PHP_FE(str_islower,         NULL)
-    PHP_FE(str_iswhitespace,    NULL)
-    PHP_FE(str_swapcase,        NULL)
     PHP_FE(str_contains,        NULL)
-    PHP_FE(str_wrap,            NULL)
-    PHP_FE(str_startsnumerical, NULL)
+    PHP_FE(str_endswith,        NULL)
     PHP_FE(str_intexplode,      NULL)
-    PHP_FE(str_unwrap,          NULL)
+    PHP_FE(str_islower,         NULL)
+    PHP_FE(str_isupper,         NULL)
+    PHP_FE(str_iswhitespace,    NULL)
     PHP_FE(str_random,          NULL)
+    PHP_FE(str_startsnumerical, NULL)
+    PHP_FE(str_startswith,      NULL)
+    PHP_FE(str_swapcase,        NULL)
+    PHP_FE(str_unwrap,          NULL)
+    PHP_FE(str_wrap,            NULL)
     {NULL, NULL, NULL}
 };
 /* }}} */
@@ -78,6 +78,9 @@ PHP_MINFO_FUNCTION(str)
 {
     php_info_print_table_start();
     php_info_print_table_header(2, "str support", "enabled");
+    php_info_print_table_row(2, "Authors", "Martin Jansen, Kay Stenschke");
+    php_info_print_table_row(2, "License", "New BSD License");
+    php_info_print_table_row(2, "Documentation and Source Code", "https://github.com/kstenschke/php-ext-str");
     php_info_print_table_end();
 }
 /* }}} */
