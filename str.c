@@ -424,8 +424,8 @@ long strToLong(char *str) {
    Split the given string by "," or the optional given delimiter, into an array of integers. */
 PHP_FUNCTION(str_intexplode)
 {
-    char *haystack, *delimiter;
-    zend_bool unique;
+    char *haystack, *delimiter = ",";
+    zend_bool unique = false;
     int haystack_len;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bs", &haystack, &haystack_len, &unique, &delimiter) == FAILURE) {
@@ -443,9 +443,22 @@ PHP_FUNCTION(str_intexplode)
 			char *item;
 			char *itemWrappedInDelimiter;
 
-			while ( (item = strsep(&haystack, ",")) ) {
-				long number = atol(item);
-				add_next_index_long(arr, number);
+			int size = 0;
+            long number;
+            bool foundDelimiter = false;
+			while ( (item = strsep(&haystack, delimiter)) ) {
+			    foundDelimiter = true;
+				number = atol(item);
+				//if (unique == false || size == 0) {
+				// @todo implement unique filter
+                    add_next_index_long(arr, number);
+                    size++;
+				//}
+			}
+			if (foundDelimiter == false) {
+			    // haystack is single number, w/o any delimiter
+			    number = atol(haystack);    // @todo ensure haystack is numeric
+			    add_next_index_long(arr, number);
 			}
 		}
     }
@@ -554,7 +567,7 @@ PHP_FUNCTION(str_random)
                 i++;
                 last = 1;
             } else if(type < 9) {
-                // Consonants, special chars
+                // Consonants
                 if (upper && !has_upper && (random() % 10) > 8) {
                     str[i] = "BCDFGHJKLMNOPQRSTVWXZ"[random() % 21];
                     has_upper = true;
