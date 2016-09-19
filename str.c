@@ -246,13 +246,9 @@ PHP_FUNCTION(str_intexplode)
     array_init(arr);
 
     if (haystack_len > 0) {
-    	int delimiter_len = strlen(delimiter);
-
-    	if (delimiter_len > 0) {
-			char *item;
-			char *itemWrappedInDelimiter;
-
-			int size = 0;
+        if (strlen(delimiter) > 0) {
+            char *item;
+            int size = 0;
             long number;
             bool foundDelimiter = false;
 
@@ -267,15 +263,15 @@ PHP_FUNCTION(str_intexplode)
                 }
             }
 
-			if (foundDelimiter == false) {
-			    if (isNumericString(haystack, haystack_len)) {
-			        // haystack single number, w/o any delimiter
-			        add_next_index_long(arr, atol(haystack));
-			    } else if(haystack_len > 0) {
-			        add_next_index_long(arr, 0);
+            if (foundDelimiter == false) {
+                if (isNumericString(haystack, haystack_len)) {
+                    // haystack single number, w/o any delimiter
+                    add_next_index_long(arr, atol(haystack));
+                } else if(haystack_len > 0) {
+                   add_next_index_long(arr, 0);
                 }
-			}
-		}
+            }
+        }
     }
 
     RETVAL_ZVAL(arr, 0, 0);
@@ -624,13 +620,13 @@ PHP_FUNCTION(str_wrap)
     lhs = estrndup(lhs, lhs_len);
     rhs = estrndup(rhs, rhs_len);
 
-	if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
+    if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
         RETURN_STRINGL(input, input_len, 0)
-	}
+    }
 
-	int result_len = lhs_len + input_len + rhs_len;
+    int result_len = lhs_len + input_len + rhs_len;
     char *result = malloc(result_len);
-	result = estrndup(result, result_len);
+    result = estrndup(result, result_len);
 
     strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
     result = strcat(result, input);
