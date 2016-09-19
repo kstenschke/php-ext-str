@@ -84,6 +84,38 @@ PHP_MINFO_FUNCTION(str)
     php_info_print_table_end();
 }
 
+bool isLonginZvalArray(zval array[], int size, long number)
+{
+    zval *zvalNumber, *result;
+    MAKE_STD_ZVAL(zvalNumber);
+    MAKE_STD_ZVAL(result);
+    ZVAL_LONG(zvalNumber, number);
+
+    int i;
+    for (i = 0; i < size; i++) {
+        is_identical_function(result, &array[i], zvalNumber);
+
+        if (Z_LVAL_P(result) != 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool isNumericString(char haystack[], int haystack_len)
+{
+    int i = 0;
+    while(i < haystack_len) {
+        if (isdigit(haystack[i]) == 0) {
+            return false;
+        }
+        i++;
+    }
+
+    return true;
+}
+
 bool endsWith(const char *post, const char *str)
 {
     if (str == NULL || post == NULL) return 0;
@@ -197,7 +229,7 @@ PHP_FUNCTION(str_endswith)
 }
 /* }}} */
 
-/* {{{ proto bool str_intexplode(string input)
+/* {{{ proto bool str_intexplode(string input, bool unique, string delimiter)
    Split the given string by "," or the optional given delimiter, into an array of integers. */
 PHP_FUNCTION(str_intexplode)
 {
@@ -223,19 +255,25 @@ PHP_FUNCTION(str_intexplode)
 			int size = 0;
             long number;
             bool foundDelimiter = false;
-			while ( (item = strsep(&haystack, delimiter)) ) {
-			    foundDelimiter = true;
-				number = atol(item);
-				//if (unique == false || size == 0) {
-				// @todo implement unique filter
-                    add_next_index_long(arr, number);
-                    size++;
-				//}
-			}
+
+            if(strstr(haystack, delimiter) != NULL) {
+                while ((item = strsep(&haystack, delimiter))) {
+                    foundDelimiter = true;
+                    number = atol(item);
+                    if (unique == false || size == 0 || ! isLonginZvalArray(arr, size, number)) {
+                        add_next_index_long(arr, number);
+                        size++;
+                    }
+                }
+            }
+
 			if (foundDelimiter == false) {
-			    // haystack is single number, w/o any delimiter
-			    number = atol(haystack);    // @todo ensure haystack is numeric
-			    add_next_index_long(arr, number);
+			    if (isNumericString(haystack, haystack_len)) {
+			        // haystack single number, w/o any delimiter
+			        add_next_index_long(arr, atol(haystack));
+			    } else if(haystack_len > 0) {
+			        add_next_index_long(arr, 0);
+                }
 			}
 		}
     }
