@@ -83,59 +83,50 @@ PHP_MINFO_FUNCTION(str)
     php_info_print_table_row(2, "Documentation and Source Code", "https://github.com/kstenschke/php-ext-str");
     php_info_print_table_end();
 }
-/* }}} */
 
-/* {{{ proto bool str_startswith(string haystack, string needle [, bool case_sensitivity])
-   Binary safe optionally case sensitive check if haystack starts with needle */
-PHP_FUNCTION(str_startswith)
+bool endsWith(const char *post, const char *str)
 {
-    char *needle, *haystack;
-    int needle_len, haystack_len, retval;
-    zend_bool cs = 0;
+    if (str == NULL || post == NULL) return 0;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b", &haystack, &haystack_len, &needle, &needle_len, &cs) == FAILURE) {
-        RETURN_FALSE;
-    }
+    size_t len_post = strlen(post),
+           len_str = strlen(str);
 
-    if (needle_len > haystack_len) {
-        RETURN_FALSE;
-    }
+    if (len_post == 0) return 1;
 
-    if (cs) {
-        retval = zend_binary_strncmp(needle, needle_len, haystack, haystack_len, needle_len);
-    } else {
-        retval = zend_binary_strncasecmp(needle, needle_len, haystack, haystack_len, needle_len);
-    }
-
-    RETURN_BOOL(retval == 0);
+	return len_str > len_post && 0 == strcmp(str + len_str - len_post, post);
 }
-/* }}} */
 
-/* {{{ proto bool str_endswith(string haystack, string needle [, bool case_sensitivity])
-   Binary safe optionally case sensitive check if haystack ends with needle */
-PHP_FUNCTION(str_endswith)
+bool startsWith(const char *pre, const char *str)
 {
-    char *needle, *haystack;
-    int needle_len, haystack_len, retval;
-    zend_bool cs = 0;
+	if (str == NULL || pre == NULL) return 0;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b", &haystack, &haystack_len, &needle, &needle_len, &cs) == FAILURE) {
-        RETURN_FALSE;
-    }
+    size_t len_pre = strlen(pre),
+           len_str = strlen(str);
 
-    if (needle_len > haystack_len) {
-        RETURN_FALSE;
-    }
+	if (len_pre == 0) return 1;
 
-    if (cs) {
-        retval = zend_binary_strncmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);
-    } else {
-        retval = zend_binary_strncasecmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);
-    }
-
-    RETURN_BOOL(retval == 0);
+    return len_str < len_pre ? false : strncmp(pre, str, len_pre) == 0;
 }
-/* }}} */
+
+long strToLong(char *str) {
+   if (str == NULL) return 0;
+
+   char *ptr; /* pointer to offset after initial number(s) */
+
+   return strtol(str, &ptr, 10);
+}
+
+char* subString (const char* input, int offset, int len, char* dest)
+{
+  int input_len = strlen (input);
+
+  if (offset + len > input_len) {
+     return NULL;
+  }
+
+  strncpy (dest, input + offset, len);
+  return dest;
+}
 
 /* {{{ proto bool str_contains(string haystack, string needle [, bool case_sensitivity])
    Binary safe optionally case sensitive check if haystack contains needle */
@@ -180,248 +171,31 @@ PHP_FUNCTION(str_contains)
 }
 /* }}} */
 
-/* {{{ proto bool str_isupper(string input)
-   Checks if all cased characters in the given input string are uppercase and if the
-   string contains at least one cased character. */
-PHP_FUNCTION(str_isupper)
+/* {{{ proto bool str_endswith(string haystack, string needle [, bool case_sensitivity])
+   Binary safe optionally case sensitive check if haystack ends with needle */
+PHP_FUNCTION(str_endswith)
 {
-    unsigned char *input, *end;
-    unsigned char c;
-    int input_len;
-    int has_cased_char = 0;
+    char *needle, *haystack;
+    int needle_len, haystack_len, retval;
+    zend_bool cs = 0;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b", &haystack, &haystack_len, &needle, &needle_len, &cs) == FAILURE) {
         RETURN_FALSE;
     }
 
-    /* A string must at least contain one cased character in order to
-     * yield a positive result.
-     */
-    if (input_len == 0) {
+    if (needle_len > haystack_len) {
         RETURN_FALSE;
     }
 
-    /* Shortcut for strings that consist of just a single character. */
-    if (input_len == 1) {
-        RETURN_BOOL(isupper(*input) != 0)
+    if (cs) {
+        retval = zend_binary_strncmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);
+    } else {
+        retval = zend_binary_strncasecmp(needle, needle_len, haystack + (haystack_len - needle_len), needle_len, needle_len);
     }
 
-    for (end = input + input_len; input < end; input++) {
-        c = *input;
-
-        if (islower(c)) {
-            RETURN_FALSE;
-        }
-
-        if (!has_cased_char && isupper(c)) {
-            has_cased_char = 1;
-        }
-    }
-
-    RETURN_BOOL(has_cased_char == 1);
+    RETURN_BOOL(retval == 0);
 }
 /* }}} */
-
-/* {{{ proto bool str_islower(string input)
-   Checks if all cased characters in the given input string are lowercase and if the
-   string contains at least one cased character. */
-PHP_FUNCTION(str_islower)
-{
-    unsigned char *input, *end;
-    unsigned char c;
-    int input_len;
-    int has_cased_char = 0;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
-        RETURN_FALSE;
-    }
-
-    // A string must at least contain one cased character in order to yield a positive result.
-    if (input_len == 0) {
-        RETURN_FALSE;
-    }
-
-    // Shortcut for strings that consist of just a single character.
-    if (input_len == 1) {
-        RETURN_BOOL(islower(*input) != 0)
-    }
-
-    for (end = input + input_len; input < end; input++) {
-        c = *input;
-
-        if (isupper(c)) {
-            RETURN_FALSE;
-        }
-
-        if (!has_cased_char && islower(c)) {
-            has_cased_char = 1;
-        }
-    }
-
-    RETURN_BOOL(has_cased_char == 1);
-}
-/* }}} */
-
-/* {{{ proto bool str_iswhitespace(string input)
-   Checks if the given string is empty or contains whitespace characters
-   only. */
-PHP_FUNCTION(str_iswhitespace)
-{
-    unsigned char *input, *end;
-    int input_len;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
-        RETURN_FALSE;
-    }
-
-    // Empty strings yield a positive result.  Need to think about this some more.
-    if (input_len == 0) {
-        RETURN_TRUE;
-    }
-
-    // Shortcut for strings that consist of just a single character.
-    if (input_len == 1) {
-        RETURN_BOOL(isspace(*input))
-    }
-
-    for (end = input + input_len; input < end; input++) {
-        if (!isspace(*input)) {
-            RETURN_FALSE;
-        }
-    }
-
-    RETURN_TRUE;
-}
-/* }}} */
-
-/* {{{ proto bool str_swapcase(string input)
-   Converts uppercase characters in the given string to their lowercase representations and vice versa. */
-PHP_FUNCTION(str_swapcase)
-{
-    char *input;
-    unsigned char *c, *end;
-    int input_len;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
-        RETURN_FALSE;
-    }
-
-    input = estrndup(input, input_len);
-
-    c = (unsigned char *)input;
-    end = (unsigned char *)c + input_len;
-
-    while (c < end) {
-        if (isupper(*c)) {
-            *c = tolower(*c);
-        } else if (islower(*c)) {
-            *c = toupper(*c);
-        }
-
-        c++;
-    }
-
-    RETURN_STRINGL(input, input_len, 0)
-}
-/* }}} */
-
-bool startsWith(const char *pre, const char *str)
-{
-	if (str == NULL || pre == NULL) return 0;
-
-    size_t len_pre = strlen(pre),
-           len_str = strlen(str);
-
-	if (len_pre == 0) return 1;
-
-    return len_str < len_pre ? false : strncmp(pre, str, len_pre) == 0;
-}
-
-char* subString (const char* input, int offset, int len, char* dest)
-{
-  int input_len = strlen (input);
-
-  if (offset + len > input_len) {
-     return NULL;
-  }
-
-  strncpy (dest, input + offset, len);
-  return dest;
-}
-
-bool endsWith(const char *post, const char *str)
-{
-    if (str == NULL || post == NULL) return 0;
-
-    size_t len_post = strlen(post),
-           len_str = strlen(str);
-
-    if (len_post == 0) return 1;
-
-	return len_str > len_post && 0 == strcmp(str + len_str - len_post, post);
-}
-
-/* {{{ proto string str_wrap(string input, string lhs, string rhs)
-   Wraps the given string into given left- and right-hand-side strings */
-PHP_FUNCTION(str_wrap)
-{
-    char *input, *lhs, *rhs;
-    zend_bool prevent_rewrap = 0;
-
-    unsigned char *c, *end;
-    int input_len, lhs_len, rhs_len;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &lhs, &lhs_len, &input, &input_len, &rhs, &rhs_len, &prevent_rewrap) == FAILURE) {
-        RETURN_FALSE;
-    }
-
-    input = estrndup(input, input_len);
-    lhs = estrndup(lhs, lhs_len);
-    rhs = estrndup(rhs, rhs_len);
-
-	if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
-        RETURN_STRINGL(input, input_len, 0)
-	}
-
-	int result_len = lhs_len + input_len + rhs_len;
-    char *result = malloc(result_len);
-	result = estrndup(result, result_len);
-
-    strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
-    result = strcat(result, input);
-    result = strcat(result, rhs);
-
-    RETURN_STRINGL(result, result_len, 0)
-}
-/* }}} */
-
-/* {{{ proto bool str_startsnumerical(string input)
-   Checks whether the given string starts with a number, or optional a negative number. */
-PHP_FUNCTION(str_startsnumerical)
-{
-    char *haystack;
-    int haystack_len;
-    zend_bool allow_negative = 0;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bb", &haystack, &haystack_len, &allow_negative) == FAILURE) {
-        RETURN_FALSE;
-    }
-
-    if (haystack_len == 0) {
-        RETURN_FALSE;
-    }
-
-    RETURN_BOOL( isdigit(haystack[0]) || (allow_negative && haystack_len > 1 && ('-' == haystack[0]) && isdigit(haystack[1])) );
-}
-/* }}} */
-
-long strToLong(char *str) {
-   if (str == NULL) return 0;
-
-   char *ptr; /* pointer to offset after initial number(s) */
-
-   return strtol(str, &ptr, 10);
-}
 
 /* {{{ proto bool str_intexplode(string input)
    Split the given string by "," or the optional given delimiter, into an array of integers. */
@@ -471,40 +245,117 @@ PHP_FUNCTION(str_intexplode)
 }
 /* }}} */
 
-/* {{{ proto string str_unwrap(string input, string lhs, string rhs)
-   Unwraps the given string (removes given left- and right-hand-side strings if found) */
-PHP_FUNCTION(str_unwrap)
+/* {{{ proto bool str_islower(string input)
+   Checks if all cased characters in the given input string are lowercase and if the
+   string contains at least one cased character. */
+PHP_FUNCTION(str_islower)
 {
-    char *input, *lhs, *rhs;
-    int input_len, lhs_len, rhs_len;
+    unsigned char *input, *end;
+    unsigned char c;
+    int input_len;
+    int has_cased_char = 0;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &input, &input_len, &lhs, &lhs_len, &rhs, &rhs_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
         RETURN_FALSE;
     }
 
-    input = estrndup(input, input_len);
-    lhs = estrndup(lhs, lhs_len);
-    rhs = estrndup(rhs, rhs_len);
+    // A string must at least contain one cased character in order to yield a positive result.
+    if (input_len == 0) {
+        RETURN_FALSE;
+    }
 
-    bool startsWithLhs = startsWith(lhs, input);
-    bool endsWithRhs   = endsWith(rhs, input);
+    // Shortcut for strings that consist of just a single character.
+    if (input_len == 1) {
+        RETURN_BOOL(islower(*input) != 0)
+    }
 
-	int result_len_fin = input_len - (startsWithLhs ? lhs_len : 0) - (endsWithRhs ? rhs_len : 0);
-    char *result = malloc(result_len_fin);
-	result = estrndup(result, result_len_fin);
+    for (end = input + input_len; input < end; input++) {
+        c = *input;
 
-    if (startsWithLhs) {
-        strncpy(result, input + lhs_len, input_len - lhs_len);
-        // if both LHS + RHS are found, RHS does not need to be removed, as it's cut-off via the available buffer length
-    } else {
-        if (endsWithRhs) {
-            strncpy(result, input, input_len - rhs_len);
-        } else {
-            result = input;
+        if (isupper(c)) {
+            RETURN_FALSE;
+        }
+
+        if (!has_cased_char && islower(c)) {
+            has_cased_char = 1;
         }
     }
 
-    RETURN_STRINGL(result, result_len_fin, 0);
+    RETURN_BOOL(has_cased_char == 1);
+}
+/* }}} */
+
+/* {{{ proto bool str_isupper(string input)
+   Checks if all cased characters in the given input string are uppercase and if the
+   string contains at least one cased character. */
+PHP_FUNCTION(str_isupper)
+{
+    unsigned char *input, *end;
+    unsigned char c;
+    int input_len;
+    int has_cased_char = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    /* A string must at least contain one cased character in order to
+     * yield a positive result.
+     */
+    if (input_len == 0) {
+        RETURN_FALSE;
+    }
+
+    /* Shortcut for strings that consist of just a single character. */
+    if (input_len == 1) {
+        RETURN_BOOL(isupper(*input) != 0)
+    }
+
+    for (end = input + input_len; input < end; input++) {
+        c = *input;
+
+        if (islower(c)) {
+            RETURN_FALSE;
+        }
+
+        if (!has_cased_char && isupper(c)) {
+            has_cased_char = 1;
+        }
+    }
+
+    RETURN_BOOL(has_cased_char == 1);
+}
+/* }}} */
+
+/* {{{ proto bool str_iswhitespace(string input)
+   Checks if the given string is empty or contains whitespace characters
+   only. */
+PHP_FUNCTION(str_iswhitespace)
+{
+    unsigned char *input, *end;
+    int input_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    // Empty strings yield a positive result.  Need to think about this some more.
+    if (input_len == 0) {
+        RETURN_TRUE;
+    }
+
+    // Shortcut for strings that consist of just a single character.
+    if (input_len == 1) {
+        RETURN_BOOL(isspace(*input))
+    }
+
+    for (end = input + input_len; input < end; input++) {
+        if (!isspace(*input)) {
+            RETURN_FALSE;
+        }
+    }
+
+    RETURN_TRUE;
 }
 /* }}} */
 
@@ -600,6 +451,154 @@ PHP_FUNCTION(str_random)
     str[len] = 0;
 
     RETURN_STRINGL(str, len, 0);
+}
+/* }}} */
+
+/* {{{ proto bool str_startsnumerical(string input)
+   Checks whether the given string starts with a number, or optional a negative number. */
+PHP_FUNCTION(str_startsnumerical)
+{
+    char *haystack;
+    int haystack_len;
+    zend_bool allow_negative = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|bb", &haystack, &haystack_len, &allow_negative) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    if (haystack_len == 0) {
+        RETURN_FALSE;
+    }
+
+    RETURN_BOOL( isdigit(haystack[0]) || (allow_negative && haystack_len > 1 && ('-' == haystack[0]) && isdigit(haystack[1])) );
+}
+/* }}} */
+
+/* {{{ proto bool str_startswith(string haystack, string needle [, bool case_sensitivity])
+   Binary safe optionally case sensitive check if haystack starts with needle */
+PHP_FUNCTION(str_startswith)
+{
+    char *needle, *haystack;
+    int needle_len, haystack_len, retval;
+    zend_bool cs = 0;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b", &haystack, &haystack_len, &needle, &needle_len, &cs) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    if (needle_len > haystack_len) {
+        RETURN_FALSE;
+    }
+
+    if (cs) {
+        retval = zend_binary_strncmp(needle, needle_len, haystack, haystack_len, needle_len);
+    } else {
+        retval = zend_binary_strncasecmp(needle, needle_len, haystack, haystack_len, needle_len);
+    }
+
+    RETURN_BOOL(retval == 0);
+}
+/* }}} */
+
+/* {{{ proto bool str_swapcase(string input)
+   Converts uppercase characters in the given string to their lowercase representations and vice versa. */
+PHP_FUNCTION(str_swapcase)
+{
+    char *input;
+    unsigned char *c, *end;
+    int input_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &input, &input_len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    input = estrndup(input, input_len);
+
+    c = (unsigned char *)input;
+    end = (unsigned char *)c + input_len;
+
+    while (c < end) {
+        if (isupper(*c)) {
+            *c = tolower(*c);
+        } else if (islower(*c)) {
+            *c = toupper(*c);
+        }
+
+        c++;
+    }
+
+    RETURN_STRINGL(input, input_len, 0)
+}
+/* }}} */
+
+/* {{{ proto string str_unwrap(string input, string lhs, string rhs)
+   Unwraps the given string (removes given left- and right-hand-side strings if found) */
+PHP_FUNCTION(str_unwrap)
+{
+    char *input, *lhs, *rhs;
+    int input_len, lhs_len, rhs_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &input, &input_len, &lhs, &lhs_len, &rhs, &rhs_len) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    input = estrndup(input, input_len);
+    lhs = estrndup(lhs, lhs_len);
+    rhs = estrndup(rhs, rhs_len);
+
+    bool startsWithLhs = startsWith(lhs, input);
+    bool endsWithRhs   = endsWith(rhs, input);
+
+	int result_len_fin = input_len - (startsWithLhs ? lhs_len : 0) - (endsWithRhs ? rhs_len : 0);
+    char *result = malloc(result_len_fin);
+	result = estrndup(result, result_len_fin);
+
+    if (startsWithLhs) {
+        strncpy(result, input + lhs_len, input_len - lhs_len);
+        // if both LHS + RHS are found, RHS does not need to be removed, as it's cut-off via the available buffer length
+    } else {
+        if (endsWithRhs) {
+            strncpy(result, input, input_len - rhs_len);
+        } else {
+            result = input;
+        }
+    }
+
+    RETURN_STRINGL(result, result_len_fin, 0);
+}
+/* }}} */
+
+/* {{{ proto string str_wrap(string input, string lhs, string rhs)
+   Wraps the given string into given left- and right-hand-side strings */
+PHP_FUNCTION(str_wrap)
+{
+    char *input, *lhs, *rhs;
+    zend_bool prevent_rewrap = 0;
+
+    unsigned char *c, *end;
+    int input_len, lhs_len, rhs_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|b", &lhs, &lhs_len, &input, &input_len, &rhs, &rhs_len, &prevent_rewrap) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    input = estrndup(input, input_len);
+    lhs = estrndup(lhs, lhs_len);
+    rhs = estrndup(rhs, rhs_len);
+
+	if (prevent_rewrap == 1 && startsWith(lhs, input) && endsWith(rhs, input)) {
+        RETURN_STRINGL(input, input_len, 0)
+	}
+
+	int result_len = lhs_len + input_len + rhs_len;
+    char *result = malloc(result_len);
+	result = estrndup(result, result_len);
+
+    strcpy(result, lhs); /* use strcpy() here to initialize the result buffer */
+    result = strcat(result, input);
+    result = strcat(result, rhs);
+
+    RETURN_STRINGL(result, result_len, 0)
 }
 /* }}} */
 
