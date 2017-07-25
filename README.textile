@@ -43,7 +43,7 @@ h3. str_iswhitespace(input) : bool
 Returns true if the given string is empty or contains whitespace characters only. Returns false otherwise.
 
 
-h3. str_random(int length [, bool upper = true, bool number = true, bool special = true])
+h3. str_random(int length [, bool upper = true, bool number = true, bool special = true]) : string
 
 Generates a (mostly) speakable random string of given length and options.
 
